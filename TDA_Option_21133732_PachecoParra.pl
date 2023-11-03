@@ -17,3 +17,4 @@ getMessageOption(Option, Message) :-
 % pruebas
 % probar option(1, "1 - viajar", 2, 4, ["viajar", "turistear", "conocer"], O1). 
 % probar option(2, "2 - estudiar", 4, 3, ["aprender", "perfeccionarme"], O2).
+
