@@ -83,3 +83,6 @@ flowAddOption(Flow, Option, NewFlow):-
     getFlowOptions(Flow, Options),
     removeDuplicates(Option, Options, NewOptions, []),
     flow(Id, Name, NewOptions, NewFlow).
+
+% pruebas
+% option(1, "1 - viajar", 2, 4, ["viajar", "turistear", "conocer"], O1), option(2, "2 - estudiar", 4, 3, ["aprender", "perfeccionarme"], O2), flow(2, "Flujo 14: mensaje de prueba", [O1, O2, O2, O1, O1], F14), flowAddOption(F14, O2, F15).
