@@ -1,6 +1,6 @@
 % TDA_Flow_21133732_PachecoParra.
 
-:- include("TDA_Option_21133732_PachecoParra.pl").
+:- consult('TDA_Option_21133732_PachecoParra.pl').
 
 % ----------------------------------------------------
 
