@@ -54,21 +54,21 @@ getChatbotStartFlowId(Chatbot, StartFlowId):-
 getChatbotFlows(Chatbot, Flows):-
     newChatbot(_, _, _, _, Flows, Chatbot).
 
-% RF6:
 % nombre predicado: chatbotAddFlow
-% Descripción: predicado que agrega un flujo a un chatbot
-% Dom: chatbot X flow X newChatbotremoveDuplicatesFlow
+% Descripción: predicado que agrega un flujo a un chatbot de manera recursiva
+% Dom: chatbot X flow X newChatbot
 % MetaPrimaria: chatbotAddFlow/3
-% MetaSecundaria: getChatbotId
-chatbotAddFlow(Chatbot, Flow, NewChatbot):-
+% MetaSecundaria: getChatbotID/2, getChatbotName/2, getChatbotWelcomeMessage/2, getChatbotStartFlowId/2, getChatbotFlows/2, removeDuplicatesFlow/4, chatbot/6
+chatbotAddFlow(Chatbot, [], Chatbot).
+chatbotAddFlow(Chatbot, [Flow|RestFlows], NewChatbot) :- 
     getChatbotID(Chatbot, ID),
     getChatbotName(Chatbot, NameChatbot),
     getChatbotWelcomeMessage(Chatbot, WelcomeMessage),
     getChatbotStartFlowId(Chatbot, StartFlowId),
     getChatbotFlows(Chatbot, Flows),
-    removeDuplicatesFlow(Flow, Flows, NewFlows, []),
-    chatbot(ID, NameChatbot, WelcomeMessage, StartFlowId, NewFlows, NewChatbot).
-removeDuplicatesFlow([], ListaAcc, ListaAcc, _).
+    removeDuplicatesFlow([Flow], Flows, NewFlows, []),
+    chatbot(ID, NameChatbot, WelcomeMessage, StartFlowId, NewFlows, TempChatbot),
+    chatbotAddFlow(TempChatbot, RestFlows, NewChatbot).
 
 % nombre predicado: removeDuplicatesFlow
 % Descripción: predicado que elimina los flujos duplicados de una lista de flujos
