@@ -28,6 +28,8 @@ noPertenece(Elem,Lista):-
 flow(Id, NameMessage, OptionsIn, [Id, NameMessage, OptionsNoDuplicados]):-
     removeDuplicates(OptionsIn, [], OptionsNoDuplicados, []).
 
+newFlow(Id, NameMessage, OptionsIn, [Id, NameMessage, OptionsIn]).
+
 % nombre predicado: removeDuplicates
 % Descripción: predicado que elimina las opciones duplicadas de un flujo
 % Dom: options X listaAcc X listaOut X IdVisitadas
