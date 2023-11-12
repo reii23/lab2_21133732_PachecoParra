@@ -24,11 +24,21 @@ noPertenece(Elem,Lista):-
 % Descripción: predicado constructor de un flujo de un chatbot
 % Dom: Id X namemessage X optionIn X flow
 % MetaPrimaria: flow/4
-% MetaSecundaria: removeDuplicates/4
-flow(Id, NameMessage, OptionsIn, [Id, NameMessage, OptionsNoDuplicados]):-
-    removeDuplicates(OptionsIn, [], OptionsNoDuplicados, []).
+flow(Id, NameMessage, OptionsIn, Flow):-
+    noOpcionesDuplicadas(OptionsIn),  % Verificar si no hay opciones duplicadas
+    Flow = [Id, NameMessage, OptionsIn].
 
 newFlow(Id, NameMessage, OptionsIn, [Id, NameMessage, OptionsIn]).
+
+% nombre predicado: noOpcionesDuplicadas
+% Descripción: predicado que verifica si no hay opciones duplicadas en una lista de opciones
+% Dom: options
+% MetaPrimaria: noOpcionesDuplicadas/1
+noOpcionesDuplicadas([]).
+noOpcionesDuplicadas([Option|Rest]):-
+    noPertenece(Option, Rest),  % Verificar que Option no esté en el Resto
+    noOpcionesDuplicadas(Rest).
+
 
 % nombre predicado: removeDuplicates
 % Descripción: predicado que elimina las opciones duplicadas de un flujo
@@ -80,11 +90,11 @@ getFlowOptions(Flow,Options):-
 % MetaPrimaria: flowAddOption/3
 % MetaSecundaria: getFlowId/2, getFlowNameMessage/2, getFlowOptions/2, removeDuplicates/4, flow/4
 flowAddOption(Flow, Option, NewFlow):-
+    getFlowOptions(Flow, Options),
+    noPertenece(Option, Options),  % Verificar si la opción no está en el flujo
     getFlowId(Flow, Id),
     getFlowNameMessage(Flow, Name),
-    getFlowOptions(Flow, Options),
-    removeDuplicates(Option, Options, NewOptions, []),
-    flow(Id, Name, NewOptions, NewFlow).
+    flow(Id, Name, [Option|Options], NewFlow).
 
 % pruebas
 % option(1, "1 - viajar", 2, 4, ["viajar", "turistear", "conocer"], O1), option(2, "2 - estudiar", 4, 3, ["aprender", "perfeccionarme"], O2), flow(2, "Flujo 14: mensaje de prueba", [O1, O2, O2, O1, O1], F14), flowAddOption(F14, O2, F15).

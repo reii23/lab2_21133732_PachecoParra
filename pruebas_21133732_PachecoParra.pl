@@ -16,6 +16,13 @@
 
 % se debe copiar y pegar la siguiente consulta:
 /*
+option(1, "1) Viajar", 12, 1, ["viajar", "turistear", "conocer"], OP1),
+option(2, "2) Estudiar", 2, 1, ["estudiar", "aprender", "perfeccionarme"], OP2),
+flow(1, "flujo1", [OP1], F10),
+flowAddOption(F10, OP2, F11),
+% flowAddOption(F10, OP1, F12), %si esto se descomenta, debe dar false, porque es opción con id duplicada.
+chatbot(0, "Inicial", "Bienvenido\n¿Qué te gustaría hacer?", 1, [F11], CB0), %solo añade una ocurrencia de F11
+%Chatbot1
 option(1, "1) New York, USA", 1, 2, ["USA", "Estados Unidos", "New York"], OP3),
 option(2, "2) París, Francia", 1, 1, ["Paris", "Eiffel"], OP4),
 option(3, "3) Torres del Paine, Chile", 1, 1, ["Chile", "Torres", "Paine", "Torres Paine", "Torres del Paine"], OP5),
@@ -53,7 +60,6 @@ systemLogin(S5, "user1", S7),
 % systemLogin(S7, "user2", S8), %si esto se descomenta, debe dar false, ya hay usuario con login
 systemLogout(S7, S9),
 systemLogin(S9, "user2", S10).
-
 */
 
 
@@ -71,20 +77,20 @@ systemLogin(S9, "user2", S10).
 
 % se debe copiar y pegar la siguiente consulta:
 /*
-option(1, "1) Entradas", 1, 2, ["Entradas", "Aperitivos", "Starters"], OP1),
+option(1, "1) Entradas", 1, 2, ["Entradas", "Aperitivos", "entrada"], OP1),
 option(2, "2) Platos Principales", 1, 1, ["Plato Principal", "Fuerte"], OP2),
 option(3, "3) Postres", 1, 1, ["Postre", "Dulce"], OP3),
 option(4, "4) Salir", 0, 1, ["Salir", "Terminar"], OP4),
-option(1, "1) Baja", 1, 2, ["Fácil", "Simple", "Baja"], OP5),
-option(2, "2) Media", 1, 2, ["Intermedio", "Media"], OP6),
-option(3, "3) Alta", 1, 3, ["Difícil", "Alta"], OP7),
-option(4, "4) Ver todas las recetas", 1, 2, ["Todas", "Listar"], OP8),
+option(1, "1) Baja", 1, 2, ["Facil", "Simple", "Baja"], OP5),
+option(2, "2) Media", 1, 2, ["Intermedio", "Medio"], OP6),
+option(3, "3) Alta", 1, 3, ["Dificil", "Alto"], OP7),
+option(4, "4) Ver todas las recetas", 1, 2, ["Todos", "Listar"], OP8),
 option(5, "5) Cambiar tipo de plato", 1, 1, ["Cambiar", "Otro tipo"], OP9),
 flow(1, "Flujo 1 ChatbotCocina\n¿Qué te gustaría cocinar?", [OP1, OP2, OP3, OP4], F1),
 flow(2, "Flujo 2 ChatbotCocina\n¿Qué nivel de dificultad prefieres para tu receta?", [OP5, OP6, OP7, OP8, OP9], F2),
 chatbot(1, "CocinaBot", "Bienvenido a CocinaBot\n¿Qué receta buscas?", 1, [F1, F2], CB1),
 system("SistemaCocinaBot", 0, [], S0),
-systemAddChatbot(S0, CB1, S1), % Primera llamada exitosa
+systemAddChatbot(S0, CB1, S1),
 % systemAddChatbot(S1, CB1, S2), % debe retornar false, ya que CB1 ya está en el sistema
 systemAddChatbot(S1, CB1, S3), % debe retornar false por duplicidad
 systemAddUser(S1, "chef1", S4),
@@ -104,5 +110,7 @@ systemLogin(S16, "chef1", S17),
 systemLogout(S17, S18), % "chef1"
 systemLogin(S18, "chef2", S19). 
 */
+
+
 
 

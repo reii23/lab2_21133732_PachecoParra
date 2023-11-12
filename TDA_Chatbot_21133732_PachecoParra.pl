@@ -10,9 +10,9 @@
 % Descripción: predicado constructor de un chatbot
 % Dom: id X name X welcomeMessage X startFlowId X flowsIn X chatbot
 % MetaPrimaria: chatbot/6
-% MetaSecundaria: removeDuplicates/4
 chatbot(ChatbotID, NameChatbot, WelcomeMessage, StartFlowId, FlowsIn, [ChatbotID, NameChatbot, WelcomeMessage, StartFlowId, FlowsOut]):-
-    removeDuplicatesFlow(FlowsIn, [], FlowsOut, []).
+    noFlowsDuplicados(FlowsIn),
+    FlowsOut = FlowsIn.
 
 % nombre predicado: newChatbot
 % Descripción: predicado que crea un nuevo chatbot sin duplicados
@@ -60,46 +60,35 @@ getChatbotStartFlowId(Chatbot, StartFlowId):-
 getChatbotFlows(Chatbot, Flows):-
     newChatbot(_, _, _, _, Flows, Chatbot).
 
-% nombre predicado: chatbotAddFlow
-% Descripción: predicado que agrega un flujo a un chatbot de manera recursiva
-% Dom: chatbot X flow X newChatbot
-% MetaPrimaria: chatbotAddFlow/3
-% MetaSecundaria: getChatbotID/2, getChatbotName/2, getChatbotWelcomeMessage/2, getChatbotStartFlowId/2, getChatbotFlows/2, removeDuplicatesFlow/4, chatbot/6
-chatbotAddFlow(Chatbot, [], Chatbot).
-chatbotAddFlow(Chatbot, [Flow|RestFlows], NewChatbot) :- 
-    getChatbotID(Chatbot, ID),
-    getChatbotName(Chatbot, NameChatbot),
-    getChatbotWelcomeMessage(Chatbot, WelcomeMessage),
-    getChatbotStartFlowId(Chatbot, StartFlowId),
-    getChatbotFlows(Chatbot, Flows),
-    removeDuplicatesFlow([Flow], Flows, NewFlows, []),
-    chatbot(ID, NameChatbot, WelcomeMessage, StartFlowId, NewFlows, TempChatbot),
-    chatbotAddFlow(TempChatbot, RestFlows, NewChatbot).
-
 % RF6:
 % nombre predicado: chatbotAddFlow
-% Descripción: predicado que agrega un flujo a un chatbot
-% Dom: chatbot X flow X newChatbotremoveDuplicatesFlow
+% Descripción: predicado que agrega un flujo a un chatbot (versión recursiva)
+% Dom: chatbot X flow X newChatbot
 % MetaPrimaria: chatbotAddFlow/3
-% MetaSecundaria: getChatbotId
-chatbotAddFlow(Chatbot, Flow, NewChatbot):-
+% MetaSecundaria: getChatbotID, getChatbotName, getChatbotWelcomeMessage, getChatbotStartFlowId, getChatbotFlows, noFlowsDuplicados
+chatbotAddFlow(Chatbot, Flow, NewChatbot) :-
+    getChatbotFlows(Chatbot, CurrentFlows),
+    noPertenece(Flow, CurrentFlows),  % Verificar si el flujo no está en los flujos actuales
+    chatbotAddFlowRec(Chatbot, Flow, CurrentFlows, NewChatbot).
+
+% nombre predicado: chatbotAddFlowRec
+% Descripción: predicado auxiliar recursivo para agregar un flujo a un chatbot
+% Dom: chatbot X flow X flows X newChatbot
+% MetaPrimaria: chatbotAddFlowRec/4
+% MetaSecundaria: getChatbotID, getChatbotName, getChatbotWelcomeMessage, getChatbotStartFlowId, getChatbotFlows, noFlowsDuplicados
+chatbotAddFlowRec(Chatbot, Flow, CurrentFlows, NewChatbot) :-
     getChatbotID(Chatbot, ID),
-    getChatbotName(Chatbot, NameChatbot),
+    getChatbotNameChatbot(Chatbot, NameChatbot),
     getChatbotWelcomeMessage(Chatbot, WelcomeMessage),
     getChatbotStartFlowId(Chatbot, StartFlowId),
-    getChatbotFlows(Chatbot, Flows),
-    removeDuplicatesFlow(Flow, Flows, NewFlows, []),
-    chatbot(ID, NameChatbot, WelcomeMessage, StartFlowId, NewFlows, NewChatbot).
-removeDuplicatesFlow([], ListaAcc, ListaAcc, _).
+    chatbot(ID, NameChatbot, WelcomeMessage, StartFlowId, [Flow|CurrentFlows], NewChatbot).
 
-% nombre predicado: removeDuplicatesFlow
-% Descripción: predicado que elimina los flujos duplicados de una lista de flujos
-% Dom: flow X flows X newFlows
-% MetaPrimaria: removeDuplicatesFlow/3
-% MetaSecundaria: getFlowId/2, noPertenece/2
-removeDuplicatesFlow([AddElem|AddRest], ListaAcc, ListaOut, IdVisitadas):-
-    getFlowId(AddElem, ID),
-    noPertenece(ID, IdVisitadas),
-    removeDuplicatesFlow(AddRest, [AddElem|ListaAcc], ListaOut, [ID|IdVisitadas]).
-removeDuplicatesFlow([_|AddRest], ListaAcc, ListaOut, IdVisitadas) :-
-    removeDuplicatesFlow(AddRest, ListaAcc, ListaOut, IdVisitadas).
+% nombre predicado: noFlowsDuplicados
+% Descripción: predicado que verifica si no hay flujos duplicados en una lista de flujos
+% Dom: flows
+% MetaPrimaria: noFlowsDuplicados/1
+% MetaSecundaria: noPertenece
+noFlowsDuplicados([]).
+noFlowsDuplicados([Flow|Rest]):-
+    noPertenece(Flow, Rest),  % Verificar que el flujo no esté en el Resto
+    noFlowsDuplicados(Rest).

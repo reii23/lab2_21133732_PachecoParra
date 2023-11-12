@@ -9,9 +9,9 @@
 % Descripción: predicado constructor de un sistema de chatbots
 % Dom: nameSystem X initialChatbotCodeLink X chatbotsIn X system
 % MetaPrimaria: system/4
-% MetaSecundaria: removeDuplicates/4
 system(SystemName, InitialChatbotCodeLink, ChatbotsIn, [SystemName, InitialChatbotCodeLink, ChatbotsOut, [], [], []]):-
-    removeDuplicates(ChatbotsIn, [], ChatbotsOut, []).
+    noChatbotsDuplicados(ChatbotsIn),  % Verificar si no hay chatbots duplicados
+    ChatbotsOut = ChatbotsIn.
 
 % nombre predicado: auxSystem
 % Descripción: predicado constructor auxiliar de un sistema de chatbots
@@ -72,6 +72,31 @@ removeDuplicatesChatbot(Chatbot, Chatbots, NewChatbots, IdVisitadas):-
     NewChatbots = [Chatbot | Chatbots].
 removeDuplicatesChatbot(_, Chatbots, Chatbots, _).
 
+% nombre predicado: noChatbotsDuplicados
+% Descripción: predicado que verifica si hay chatbots duplicados en una lista de chatbots
+% Dom: chatbots
+% MetaPrimaria: noChatbotsDuplicados/1
+% MetaSecundaria: chatbotsDuplicados/1
+noChatbotsDuplicados(Chatbots) :-
+    \+ chatbotsDuplicados(Chatbots).
+
+% nombre predicado: chatbotsDuplicados
+% Descripción: predicado que verifica si hay chatbots duplicados en una lista de chatbots
+% Dom: chatbots
+% MetaPrimaria: chatbotsDuplicados/1
+% MetaSecundaria: getChatbotID/2, tieneDuplicados/1
+chatbotsDuplicados(Chatbots) :-
+    findall(ID, (pertenece(Chatbot, Chatbots), getChatbotID(Chatbot, ID)), IDs),
+    tieneDuplicados(IDs).
+
+% nombre predicado: tieneDuplicados
+% Descripción: predicado que verifica si hay elementos duplicados en una lista
+% Dom: lista
+% MetaPrimaria: tieneDuplicados/1
+% MetaSecundaria: pertenece/2
+tieneDuplicados([H | T]) :- pertenece(H, T).
+tieneDuplicados([_ | T]) :- tieneDuplicados(T).
+
 % RF8:
 % nombre predicado: systemAddChatbot
 % Descripción: predicado que agrega un chatbot a un sistema
@@ -103,9 +128,9 @@ add(Elemento,Lista,[Elemento|Lista]).
 % MetaSecundaria: noPertenece/2, append/3, user/2
 addUser([],Name,[Name]).
 addUser(UserRegistered, Users, NewUsers):-
-    noPertenece2(Users, UserRegistered),  % Verifica que UserName no esté en la lista de Users
+    noPertenece2(Users, UserRegistered), 
     add(Users, UserRegistered, NewUsers).
-addUser(UserRegistered, _, UserRegistered).  % Si UserName ya está en Users, deja la lista como está
+addUser(UserRegistered, _, UserRegistered).  
 
 % RF9:
 % nombre predicado: systemAddUser
@@ -164,11 +189,55 @@ systemLogout(System, NewSystem):-
     setUsuarioLogeado(System, [], NewSystem).
 
 % RFN 12: systemTalkRec
-% nombre predicado: systemTalkRec
-% Descripción: Permite a un usuario interactuar con el sistema
-% Dom: system X message X newSystem
+% Nombre predicado: systemTalkRec
+% Descripción: Predicado que permite interactuar con un chatbot.
+% Prerrequisitos: Solo se puede conversar si se ha iniciado una sesión con un usuario previamente registrado.
+% Dom: system X message (string) X system
 % MetaPrimaria: systemTalkRec/3
 
-% systemTalkRec(S4, "hola", S5),
-% systemTalkRec(S5, "viajar", S6).
+% Actualiza la conversación en el sistema en función del mensaje del usuario.
+systemTalkRec(System, Message, NewSystem) :-
+    getUsuarioLogeado(System, UserLogin),
+    userLogged(UserLogin),  % Verifica que hay una sesión iniciada con el usuario.
+    getSystemInitialChatbotCodeLink(System, InitialChatbotCodeLink),
+    getSystemChatbots(System, Chatbots),
+    findChatbot(Chatbots, InitialChatbotCodeLink, CurrentChatbot),
+    processMessage(CurrentChatbot, Message, Response),
+    updateSystemWithResponse(System, Response, NewSystem).
 
+% Encuentra el chatbot en la lista de chatbots del sistema por su ID.
+findChatbot([Chatbot|_], ID, Chatbot) :-
+    getChatbotID(Chatbot, ID).
+findChatbot([_|Tail], ID, Result) :-
+    findChatbot(Tail, ID, Result).
+
+% Procesa el mensaje enviado al chatbot y determina la respuesta.
+processMessage(Chatbot, Message, Response) :-
+    getChatbotFlows(Chatbot, Flows),
+    getCurrentFlow(Flows, CurrentFlow),
+    getFlowOptions(CurrentFlow, Options),
+    matchMessageToOption(Message, Options, MatchedOption),
+    MatchedOption = option(_, Response, _, _, _).
+
+% Obtiene el flujo actual basado en el estado del chatbot.
+getCurrentFlow(Flows, CurrentFlow) :-
+    % Aquí se debe implementar la lógica para seleccionar el flujo actual.
+    Flows = [CurrentFlow|_].
+
+% Busca en el flujo actual la opción que coincide con el mensaje proporcionado.
+matchMessageToOption(Message, Options, MatchedOption) :-
+    member(Option, Options),
+    Option = option(_, _, _, _, Keywords),
+    member(Message, Keywords),
+    MatchedOption = Option.
+
+% Actualiza el sistema con la respuesta del chatbot.
+updateSystemWithResponse(System, Response, NewSystem) :-
+    getSystemChatHistory(System, ChatHistory),
+    append(ChatHistory, [Response], UpdatedChatHistory),
+    setSystemChatHistory(System, UpdatedChatHistory, NewSystem).
+
+% Establece el historial de chat actualizado en el sistema.
+setSystemChatHistory([SystemName, InitialChatbotCodeLink, Chatbots, Users, UserLogin, _], UpdatedChatHistory, [SystemName, InitialChatbotCodeLink, Chatbots, Users, UserLogin, UpdatedChatHistory]).
+
+% Suponemos que todos los otros predicados auxiliares necesarios están definidos correctamente.
