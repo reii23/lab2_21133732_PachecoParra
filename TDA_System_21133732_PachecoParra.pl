@@ -122,7 +122,7 @@ noPertenece2(Elem, [Cabeza|Cola]) :-
 add(Elemento,Lista,[Elemento|Lista]).
 
 % nombre predicado: addUser
-% Descripcion: predicado que agrega un usuario a la lista de usuarios si no est� ya presente
+% Descripcion: predicado que agrega un usuario a la lista de usuarios si no est� ya presente
 % Dom: userName X users X newUsers
 % MetaPrimaria: addUser/3
 % MetaSecundaria: noPertenece/2, append/3, user/2
@@ -171,8 +171,6 @@ userLogged(UserLogin) :-
 systemLogin([SystemName, InitialChatbotCodeLink, Chatbots, Users, UserLogin, ChatHistory], UserName, [SystemName, InitialChatbotCodeLink, Chatbots, Users, [UserName], ChatHistory]) :-
     userRegistered(UserName, Users),
     \+ userLogged(UserLogin).
-
-% pruebas hasta aquí option(1, "1 - viajar", 2, 4, ["viajar", "turistear", "conocer"], O1), option(2, "2 - estudiar", 4, 3, ["aprender", "perfeccionarme"], O2), flow(1, "Flujo 1: mensaje de prueba", [], F1), flow(2, "Flujo 2: mensaje de prueba", [O1, O2, 02, 02, 02, 02, 02], F2), chatbot(10, "Chatbot 10", "Bienvenido al chatbot 10", 10, [F1, F2, F1], C10), system("NewSystem", 0, [ ], S0), systemAddChatbot(S0, C10, S1), systemAddUser(S1, "user0", S2), systemAddUser(S2, "user1", S3), systemLogin(S3, "user0", S4).
 
 % RFN 11: systemLogout
 % nombre predicado: systemLogout
@@ -227,7 +225,6 @@ processMessage(Chatbot, Message, Response) :-
 % Dom: flows X currentFlow
 % MetaPrimaria: getCurrentFlow/2
 getCurrentFlow(Flows, CurrentFlow) :-
-    % Aquí se debe implementar la logica para seleccionar el flujo actual.
     Flows = [CurrentFlow|_].
 
 % nombre predicado: matchMessageToOption

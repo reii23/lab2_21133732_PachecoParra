@@ -69,14 +69,14 @@ systemLogin(S5, "user1", S7),
 % systemLogin(S7, "user2", S8), %si esto se descomenta, debe dar false, ya hay usuario con login
 systemLogout(S7, S9),
 systemLogin(S9, "user2", S10).
-% systemTalkRec(S10, "hola", S11), %si esto se descomenta, debe dar false, hola no es parte de los keywords
+% systemTalkRec(S10, "hola", S11). %si esto se descomenta, debe dar false, hola no es parte de los keywords
 % systemTalkRec(S10, "1", S12),
 % systemTalkRec(S12, "1", S13),
 % systemTalkRec(S13, "Museo", S14),
 % systemTalkRec(S14, "1", S15),
 % systemTalkRec(S15, "3", S16),
 % systemTalkRec(S16, "5", S17).
-% para probar los demas ir poniendo un . en el final si se descomenta.
+% para probar los demas ir poniendo un . en el final si se descomenta, y al anterior poner una ,
 */
 
 
@@ -106,6 +106,9 @@ option(5, "5) Cambiar tipo de plato", 1, 1, ["Cambiar", "Otro tipo"], OP9),
 flow(1, "Flujo 1 ChatbotCocina\n¿Qué te gustaría cocinar?", [OP1, OP2, OP3, OP4], F1),
 flow(2, "Flujo 2 ChatbotCocina\n¿Qué nivel de dificultad prefieres para tu receta?", [OP5, OP6, OP7, OP8, OP9], F2),
 flow(3, "Flujo 3 ChatbotCocina\n¿Qué receta te gustaría ver?", [OP4], F3),
+flowAddOption(F3, OP2, F4),
+% flowAddOption(F4, OP2, F5), % si se descomenta debe entregar false ya que agrega una opcion que ya está en el flujo
+flowAddOption(F1, OP5, F23),
 chatbot(1, "CocinaBot", "Bienvenido a CocinaBot\n¿Qué receta buscas?", 1, [F1, F2], CB1),
 chatbot(2, "CocinaBot2", "Bienvenido a CocinaBot2\n¿Qué receta buscas?", 1, [F1, F2], CB2),
 chatbot(3, "CocinaBot3", "Bienvenido a CocinaBot3\n¿Qué receta buscas?", 1, [F1, F2], CB3),
@@ -133,11 +136,10 @@ systemLogout(S15, S16),
 systemLogin(S16, "chef1", S17), 
 systemLogout(S17, S18),
 systemLogin(S18, "chef2", S19).
-% systemTalkRec(S19, "hola", S25). %si esto se descomenta, debe dar false, hola no es parte de los keywords
-% systemTalkRec(S25, "1", S26). %si esto se descomenta, debe dar false ya que S25 no existe
+systemTalkRec(S19, "hola", S25), %si esto se descomenta, debe dar false, hola no es parte de los keywords
+% systemTalkRec(S25, "1", S26), %si esto se descomenta, debe dar false ya que S25 no existe
 % systemTalkRec(SS26, "1", S27). %si esto se descomenta, debe dar false ya que S26 da false
-
-% para probar los demas ir poniendo un . en el final si se descomenta.
+% para probar los demas ir poniendo un . en el final si se descomenta, y al anterior poner una ,
 */
 
 

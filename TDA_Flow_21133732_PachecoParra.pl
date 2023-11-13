@@ -16,6 +16,7 @@ pertenece(Elem,[_|Resto]):-
 % Descripcion: predicado que verifica si un elemento no pertenece a una lista
 % Dom: elemento X lista
 % MetaPrimaria: noPertenece/2
+% MetaSecundaria: pertenece/2
 noPertenece(Elem,Lista):-
     \+pertenece(Elem,Lista).
 
@@ -24,6 +25,7 @@ noPertenece(Elem,Lista):-
 % Descripcion: predicado constructor de un flujo de un chatbot
 % Dom: Id X namemessage X optionIn X flow
 % MetaPrimaria: flow/4
+% MetaSecundaria: noOpcionesDuplicadas/1, newFlow/4
 flow(Id, NameMessage, OptionsIn, Flow):-
     noOpcionesDuplicadas(OptionsIn),  % Verificar si no hay opciones duplicadas
     Flow = [Id, NameMessage, OptionsIn].
@@ -34,6 +36,7 @@ newFlow(Id, NameMessage, OptionsIn, [Id, NameMessage, OptionsIn]).
 % Descripcion: predicado que verifica si no hay opciones duplicadas en una lista de opciones
 % Dom: options
 % MetaPrimaria: noOpcionesDuplicadas/1
+% MetaSecundaria: noPertenece/2, noOpcionesDuplicadas/1
 noOpcionesDuplicadas([]).
 noOpcionesDuplicadas([Option|Rest]):-
     noPertenece(Option, Rest),
@@ -76,12 +79,6 @@ getFlowNameMessage(Flow, Name):-
 getFlowOptions(Flow,Options):-
     newFlow(_, _, Options, Flow).
 
-% pruebas
-% probar flow(1, "Flujo 1: mensaje de prueba", [ ], F1).
-% probar flow(2, "Flujo 1: mensaje de prueba", [O1, O2], F2).
-% probar flow(1, "Flujo 13: mensaje de prueba", [], F13).
-% probar flow(2, "Flujo 14: mensaje de prueba", [O1, O2, O2, O1, O1], F14).
-
 % RF4:
 % nombre predicado: flowAddOption
 % Descripcion: predicado que agrega una opcion a un flujo
@@ -94,6 +91,3 @@ flowAddOption(Flow, Option, NewFlow):-
     getFlowId(Flow, Id),
     getFlowNameMessage(Flow, Name),
     flow(Id, Name, [Option|Options], NewFlow).
-
-% pruebas
-% option(1, "1 - viajar", 2, 4, ["viajar", "turistear", "conocer"], O1), option(2, "2 - estudiar", 4, 3, ["aprender", "perfeccionarme"], O2), flow(2, "Flujo 14: mensaje de prueba", [O1, O2, O2, O1, O1], F14), flowAddOption(F14, O2, F15).
