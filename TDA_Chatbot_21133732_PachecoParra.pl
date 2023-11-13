@@ -68,7 +68,7 @@ getChatbotFlows(Chatbot, Flows):-
 % MetaSecundaria: getChatbotID, getChatbotName, getChatbotWelcomeMessage, getChatbotStartFlowId, getChatbotFlows, noFlowsDuplicados
 chatbotAddFlow(Chatbot, Flow, NewChatbot) :-
     getChatbotFlows(Chatbot, CurrentFlows),
-    noPertenece(Flow, CurrentFlows),  % Verificar si el flujo no está en los flujos actuales
+    noPertenece(Flow, CurrentFlows),
     chatbotAddFlowRec(Chatbot, Flow, CurrentFlows, NewChatbot).
 
 % nombre predicado: chatbotAddFlowRec
@@ -87,8 +87,8 @@ chatbotAddFlowRec(Chatbot, Flow, CurrentFlows, NewChatbot) :-
 % Descripción: predicado que verifica si no hay flujos duplicados en una lista de flujos
 % Dom: flows
 % MetaPrimaria: noFlowsDuplicados/1
-% MetaSecundaria: noPertenece
+% MetaSecundaria: noPertenece/2
 noFlowsDuplicados([]).
 noFlowsDuplicados([Flow|Rest]):-
-    noPertenece(Flow, Rest),  % Verificar que el flujo no esté en el Resto
+    noPertenece(Flow, Rest), 
     noFlowsDuplicados(Rest).

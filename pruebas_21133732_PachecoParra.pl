@@ -5,10 +5,13 @@
 
 % en el siguiente script de pruebas del laboratorio 2 de Paradigmas de Programación se encuentran las pruebas de los predicados realizados
 
-% Script Profesor:
+% si en las consultas aparecen [...] se debe copiar y pegar el siguiente codigo en la primera consulta:
+% set_prolog_flag(answer_write_options,[max_depth(0)]).
+
+% -------------------------------Script Profesor--------------------------------------
 % este es el script que se encuentra en el documento oficial del laboratorio 2
 
-% casos en que la consulta debe retornar false:
+% casos en que la consulta debe retornar false: (se deben descomentar los casos en el mismo script de abajo)
 % systemAddChatbot(S0, CB0, S1), (entrega false ya que se agrega un chatbot con un id duplicado)
 % systemAddUser(S3, "user2", S4), (entrega false ya que se agrega un usuario que ya se encuentra en el sistema)
 % systemLogin(S5, "user8", S6), (entrega false ya que se intenta logear un usuario que no está registrado en el sistema)
@@ -21,6 +24,7 @@ option(2, "2) Estudiar", 2, 1, ["estudiar", "aprender", "perfeccionarme"], OP2),
 flow(1, "flujo1", [OP1], F10),
 flowAddOption(F10, OP2, F11),
 % flowAddOption(F10, OP1, F12), %si esto se descomenta, debe dar false, porque es opción con id duplicada.
+% flowAddOption(F99, OP1, F100), % si esto se descomenta debe dar false ya que F99 no existe
 chatbot(0, "Inicial", "Bienvenido\n¿Qué te gustaría hacer?", 1, [F11], CB0), %solo añade una ocurrencia de F11
 %Chatbot1
 option(1, "1) New York, USA", 1, 2, ["USA", "Estados Unidos", "New York"], OP3),
@@ -41,12 +45,17 @@ flow(1, "Flujo 1 Chatbot1\n¿Dónde te Gustaría ir?", [OP3, OP4, OP5, OP6], F20
 flow(2, "Flujo 2 Chatbot1\n¿Qué atractivos te gustaría visitar?", [OP7, OP8, OP9, OP10], F21),
 flow(3, "Flujo 3 Chatbot1\n¿Vas solo o acompañado?", [OP11, OP12, OP13, OP14, OP15], F22),
 chatbot(1, "Agencia Viajes",  "Bienvenido\n¿Dónde quieres viajar?", 1, [F20, F21, F22], CB1),
+% chatbotAddFlow(CB1, F20, CB30), % si se descomenta esto, debe dar false, ya que CB1 ya tiene F20  
 %Chatbot2
 option(1, "1) Carrera Técnica", 2, 1, ["Técnica"], OP16),
 option(2, "2) Postgrado", 2, 1, ["Doctorado", "Magister", "Postgrado"], OP17),
 option(3, "3) Volver", 0, 1, ["Volver", "Salir", "Regresar"], OP18),
 flow(1, "Flujo 1 Chatbot2\n¿Qué te gustaría estudiar?", [OP16, OP17, OP18], F30),
 chatbot(2, "Orientador Académico",  "Bienvenido\n¿Qué te gustaría estudiar?", 1, [F30], CB2),
+% Chatbot99
+chatbot(99, "Chatbot99", "Bienvenido\n¿Qué te gustaría hacer?", 1, [], CB99),
+chatbotAddFlow(CB99, F10, CB100),
+chatbotAddFlow(CB100, F11, CB101),
 system("Chatbots Paradigmas", 0, [CB0], S0),
 % systemAddChatbot(S0, CB0, S1), %si esto se descomenta, debe dar false, porque es chatbot id duplicado.
 systemAddChatbot(S0, CB1, S01),
@@ -60,14 +69,22 @@ systemLogin(S5, "user1", S7),
 % systemLogin(S7, "user2", S8), %si esto se descomenta, debe dar false, ya hay usuario con login
 systemLogout(S7, S9),
 systemLogin(S9, "user2", S10).
+% systemTalkRec(S10, "hola", S11), %si esto se descomenta, debe dar false, hola no es parte de los keywords
+% systemTalkRec(S10, "1", S12),
+% systemTalkRec(S12, "1", S13),
+% systemTalkRec(S13, "Museo", S14),
+% systemTalkRec(S14, "1", S15),
+% systemTalkRec(S15, "3", S16),
+% systemTalkRec(S16, "5", S17).
+% para probar los demas ir poniendo un . en el final si se descomenta.
 */
 
 
-% Script Alumno
+% ----------------------- Script Alumno ----------------------------
 
-% este es el script creado por el alumno que simula un chatbot de cocina
+% este es el script creado por el alumno que simula |un chatbot de cocina
 
-% casos en que el script debe retornar false:
+% casos en que el script debe retornar false: (se deben descomentar los casos en el mismo script de abajo)
 % systemAddChatbot(S1, CB1, S2), (entrega false ya que se agrega un chatbot con un id duplicado)
 % systemAddChatbot(S1, CB1, S3), (entrega false ya que se agrega un chatbot con un id duplicado)
 % systemAddUser(S5, "chef1", S6), (entrega false ya que el usuario ya está registrado en el sistema)
@@ -88,11 +105,18 @@ option(4, "4) Ver todas las recetas", 1, 2, ["Todos", "Listar"], OP8),
 option(5, "5) Cambiar tipo de plato", 1, 1, ["Cambiar", "Otro tipo"], OP9),
 flow(1, "Flujo 1 ChatbotCocina\n¿Qué te gustaría cocinar?", [OP1, OP2, OP3, OP4], F1),
 flow(2, "Flujo 2 ChatbotCocina\n¿Qué nivel de dificultad prefieres para tu receta?", [OP5, OP6, OP7, OP8, OP9], F2),
+flow(3, "Flujo 3 ChatbotCocina\n¿Qué receta te gustaría ver?", [OP4], F3),
 chatbot(1, "CocinaBot", "Bienvenido a CocinaBot\n¿Qué receta buscas?", 1, [F1, F2], CB1),
+chatbot(2, "CocinaBot2", "Bienvenido a CocinaBot2\n¿Qué receta buscas?", 1, [F1, F2], CB2),
+chatbot(3, "CocinaBot3", "Bienvenido a CocinaBot3\n¿Qué receta buscas?", 1, [F1, F2], CB3),
 system("SistemaCocinaBot", 0, [], S0),
+system("SistemaCocinaBot2", 0, [], S20),
+system("SistemaCocinaBot3", 0, [], S22),
 systemAddChatbot(S0, CB1, S1),
 % systemAddChatbot(S1, CB1, S2), % debe retornar false, ya que CB1 ya está en el sistema
-systemAddChatbot(S1, CB1, S3), % debe retornar false por duplicidad
+% systemAddChatbot(S1, CB1, S3), % debe retornar false por duplicidad
+systemAddChatbot(S1, CB2, S2), 
+systemAddChatbot(S2, CB3, S3),
 systemAddUser(S1, "chef1", S4),
 systemAddUser(S4, "chef2", S5),
 % systemAddUser(S5, "chef1", S6), % debe retornar false, ya que "chef1" ya está en el sistema
@@ -102,13 +126,18 @@ systemLogin(S7, "chef1", S8),
 systemLogout(S8, S10), % "chef1" 
 systemLogin(S10, "chef2", S11), 
 % systemLogin(S11, "chef3", S12), % debe retornar false, "chef2" ya inició sesión
-systemLogout(S11, S13), % "chef2"
+systemLogout(S11, S13), 
 % systemLogin(S13, "chef4", S14), % debe retornar false, "chef4" no está registrado
 systemLogin(S13, "chef3", S15), 
-systemLogout(S15, S16), % "chef3" 
+systemLogout(S15, S16),
 systemLogin(S16, "chef1", S17), 
-systemLogout(S17, S18), % "chef1"
-systemLogin(S18, "chef2", S19). 
+systemLogout(S17, S18),
+systemLogin(S18, "chef2", S19).
+% systemTalkRec(S19, "hola", S25). %si esto se descomenta, debe dar false, hola no es parte de los keywords
+% systemTalkRec(S25, "1", S26). %si esto se descomenta, debe dar false ya que S25 no existe
+% systemTalkRec(SS26, "1", S27). %si esto se descomenta, debe dar false ya que S26 da false
+
+% para probar los demas ir poniendo un . en el final si se descomenta.
 */
 
 
