@@ -1,0 +1,30 @@
+------------------RNF--------------------
+
+RNF1: Autoevaluación - Puntaje Asociado: 1
+RNF2: Lenguaje - Puntaje Asociado: 1
+RNF3: Versión - Puntaje Asociado: 1
+RNF4: Standard - Puntaje Asociado: 1
+RNF5: No variables - Puntaje Asociado: 1
+RNF6: Documentación - Puntaje Asociado: 1
+RNF7: Dom->Rec - Puntaje Asociado: 1
+RNF8: Organización - Puntaje Asociado: 1
+RNF9: Historial - Puntaje Asociado: 1
+RFN10: Script de pruebas - Puntaje Asociado: 1
+RFN11: Prerequisitos - Puntaje Asociado: 1
+
+-----------------RFN----------------------
+
+RFN1: TDAs - Puntaje Asociado: 1
+RFN2: option - Puntaje Asociado: 1
+RFN3: flow - Puntaje Asociado: 1
+RFN4: flowAddOption - Puntaje Asociado: 1
+RFN5: chatbot - Puntaje Asociado: 1
+RFN6: chatbotAddFlow - Puntaje Asociado: 1
+RFN7: system - Puntaje Asociado: 1
+RFN8: systemAddhatbot - Puntaje Asociado: 1
+RFN9: systemAddUser - Puntaje Asociado: 1
+RFN10: systemLogin - Puntaje Asociado: 1
+RFN11: systemLogout - Puntaje Asociado: 1
+RFN12: systemTalkRec - Puntaje Asociado: 0.25
+RFN13: systemSynthesis - Puntaje Asociado: 0
+RFN14: systemSimulate - Puntaje Asociado: 0
